@@ -1,0 +1,306 @@
+<!Doctype html>
+
+
+<html>
+
+	<head>
+		<script src="jquery.js"></script>
+		<style>
+			body{
+				display:flex;
+				justify-content:center;
+				flex-wrap:wrap;
+			}
+			#input1{
+				width:40pt;
+				padding:15pt;
+				border-radius:15pt;
+				margin-top:80pt;
+				margin-bottom:50pt;
+				font-size:30pt;
+			}
+
+			#String, #String2{
+				position:relative;				
+				display:flex;
+				height:50pt;
+				left:500px;
+				background-color:lightblue;
+				font-size:40pt;
+				border-radius:20pt;
+				text-align:left;
+			}
+			
+			#String p,#String2 p{
+				margin:0pt;
+				text-align:center;
+				width:20pt;
+				padding:0pt;
+			}
+			
+			.markiert{
+				opacity:0.5;
+				background-color:black;
+			}
+			#Ausgabe{
+				width:100%;
+			 	font-size:40pt;
+				min-width:50pt;
+				min-height:50pt;
+			}
+		
+			.falsch{
+			color:red;}
+		</style>
+	</head>
+	
+	<body>
+		<div id="user1">
+			<input id="input1">  </input>
+		</div>
+			<div id="String">
+			</div>
+			<div id="String2">
+			</div>
+		<div id="Ausgabe">
+		</div>
+		<div style="width:100%;">
+			<button onClick="neuerString()">
+				neuen String
+			</button>
+		</div>
+
+		<script>
+			var string = "k kkk kk kkkk k k kkk kj kkj jkk kj jj j kkk jk kj kk kj lll l lll";  //string definieren
+				for(i=0;i<string.length;i++){
+				$("#String").append("<p>" + string[i] +"</p>");
+				var breite=$("#String").css("width");
+				$("#String2").css("width", breite);
+			}
+			var tastenAnschlagStart="";
+			var tastenAnschlagNext="";
+			var tastenCounter=0;
+			var zeitVerbrauch="";
+			var pos=500; //entspricht dem css vom String ("left")
+			
+			$("#input1").focus();
+			var startZeit= $.now();
+			var fehler=0;
+			var trefferAnzahl=0;
+			var aktuellePositionImString= 0;
+			var aktuell=0;
+			
+			$("#input1").keyup(function(e){			//Wenn Taste gedrückt (bzw beim hochnehmen der Taste) wird passiert folgendes:
+				// console.log(`key=${e.key},code=${e.code}`);
+				if(e.code=="Backspace"){
+				 $("#String2").children().last().remove();
+				}
+				else{
+					var inhalt = $(this).val();       //Inhalt des aktuellen Inputfensters auslesen und in Variable "inhalt" speichernl
+					$("#String2").append("<p>"+ inhalt + "</p>"); //Inhalt in string2 eingeben..
+				
+					$("#input1").val("");         //inputfenster wieder leeren
+					var y = string.substring(trefferAnzahl,trefferAnzahl+1);       // den ersten Wert des Strings auslesen, in y speichern
+					//alert(inhalt +" : "+ y + "Treffer: " + trefferAnzahl);
+					if(inhalt==y){                 //Den 1. Wert mit der Eingabe vergleichen. Entspricht die Eingabe dem Wert, dann wird:
+						console.log(inhalt + " " + y);
+						tastenAnschlagNext=$.now();
+						if(tastenCounter == 0){
+							tastenAnschlagStart=$.now();
+						}else{
+						}
+						zeitVerbrauch=tastenAnschlagNext-tastenAnschlagStart; // in millisekunden oder so? ZEITVERBRAUCH
+						if(zeitVerbrauch==0){
+						}
+						else
+						{	
+							var geschwindigkeit=tastenCounter/zeitVerbrauch;
+							//BEWEGUNGSFUNKTION:
+							aktuell=$(".markiert").last().index();
+							var anzahlKinder = $("#String").children().length;
+							var breiteFrame=$("#String").css("width");
+							breiteFrame=breiteFrame.substring(0,breiteFrame.length-2); //nur die zahl extrahieren;
+						
+
+							aktuellePositionImString= aktuell/anzahlKinder*breiteFrame;
+
+							var id=setInterval(frame,100);
+							function frame(){
+								if(pos>500-aktuellePositionImString){
+									pos=pos-1;
+									$("#String").css("left",pos +"px");	
+									$("#String2").css("left",pos +"px");	
+								}else{
+									clearInterval(id);
+								}
+							}
+						}
+						var anzahlRot=$(".falsch").length;
+						//alert(anzahlRot); klappt, sagt aber nicht die zahl wenns rote gibt
+						if(anzahlRot==0){ //nur wenn keins rot ist
+							$("#String").children().eq(trefferAnzahl).addClass("markiert");
+							trefferAnzahl = trefferAnzahl+1;
+						}else{
+							$("#String2").children().last().addClass("falsch");
+						}
+						if(trefferAnzahl==string.length){ //ENDE
+							var endZeit=$.now();
+							var verbrauchteZeit = endZeit-startZeit;
+							verbrauchteZeit = verbrauchteZeit.toString().substring(0,2);
+							$("#Ausgabe").text("Deine Zeit: " + verbrauchteZeit + " Sekunden" + ". Anzahl der Fehler:" + fehler);
+						}
+					}				
+					else{
+						fehler++
+						$("#String2").children().last().addClass("falsch");
+					}
+					tastenAnschlagStart=tastenAnschlagNext;
+					tastenCounter++;
+				}
+			});
+			
+			function neuerString(){
+				$("#Ausgabe").empty();
+				var buchstaben=zahlzuBuchstabe(4);
+				var neuesArray=stringBauer(buchstaben);
+				//alert(neuesArray);   //hier richtiger String (leerzeichen "leer")
+				var neuerString="";
+				$("#String").empty();
+				$("#String2").empty();
+				for(i=0;i<neuesArray.length;i++){
+					if(neuesArray[i]=="leer"){  /////////ARBEIT
+						neuerString=neuerString+" ";
+					}else{
+						neuerString=neuerString+neuesArray[i];
+					}
+					$("#String").append("<p>" + neuerString[i] +"</p>");
+				}
+				
+				//alert(neuerString); //falsch die leehrzecihen
+				
+				
+				string=neuerString;
+				tastenAnschlagStart="";
+				tastenAnschlagNext="";
+				tastenCounter=0;
+				zeitVerbrauch="";			
+				$("#input1").focus();
+				startZeit= $.now();
+				fehler=0;
+				trefferAnzahl=0;
+				$("#String").css("left","500px");
+				$("#String2").css("left","500px");
+				pos=500;
+				aktuellePositionImString= 0;
+				aktuell=0;
+				var breite=$("#String").css("width");
+				$("#String2").css("width", breite);
+			}
+			
+			function zahlzuBuchstabe(anzahl){
+				var buchstabenString=[];
+				for(i=0;i<anzahl;i++){
+				var buchstabe="";
+				switch(i){
+					case 0: buchstabe="leer";
+						break;
+					case 1: buchstabe="j";
+						break;
+					case 2: buchstabe="k";
+						break;
+					case 3: buchstabe="l";
+						break;
+					case 4:	buchstabe="f";
+						break;
+					case 5: buchstabe="d";
+						break;
+					case 6: buchstabe="s";
+						break;
+					case 7: buchstabe="a";
+						break;
+					case 8: buchstabe= "ö";
+						break;
+						//ab hier schwerer:
+					case 9: buchstabe="r";
+						break;
+					case 10: buchstabe="e";
+						break;
+					case 11: buchstabe="u";
+						break;
+					case 12: buchstabe="w";
+						break;
+					case 13: buchstabe="i";
+						break;
+					case 14: buchstabe="o";
+						break;
+					case 15: buchstabe="n";
+						break;
+					case 16: buchstabe="m";
+						break;
+					case 17: buchstabe="p";
+						break;
+					case 18: buchstabe=",";
+						break;
+					case 19: buchstabe="q";
+						break;
+					case 20: buchstabe="c";
+						break;
+					case 21: buchstabe="h";
+						break;
+					case 22: buchstabe="g";
+						break;
+					case 23: buchstabe="t";
+						break;
+					case 24: buchstabe="v";
+						break;
+					case 25: buchstabe="b";
+						break;
+					case 26: buchstabe="x";
+						break;
+					case 27: buchstabe="y";
+						break;
+					case 28: buchstabe="ä";
+						break;
+					case 29: buchstabe="ü";
+						break;
+					default: 
+						break;			
+				}
+				buchstabenString.push(buchstabe);
+				}
+				return buchstabenString;
+				
+			}
+			
+	function stringBauer(buchstaben){
+		
+		var stringNeu=[];
+		//alert(buchstaben); //LEEHR JKL noch richtig hier ->>>>>>>>>>MAXIMAL EINE PAUSE IMPLEMENTIEREN!!
+		var pauseWAR=false;
+		var anzahl=buchstaben.length;
+		for(i=0;i<66;i++){ //30 buchstaben-string
+			var random=Math.floor(Math.random()*(anzahl))+0;
+			while((pauseWAR==true)&&(random==0)){
+				random=Math.floor(Math.random()*(anzahl))+0;
+			}
+			if(random==0){
+				pauseWAR=true;
+			}
+			else{
+				pauseWAR=false;
+			}
+				stringNeu.push(buchstaben[random]);
+		}
+		return stringNeu;
+		
+
+		
+		
+	}
+			
+			</script>
+	</body>
+
+
+
+</html>
