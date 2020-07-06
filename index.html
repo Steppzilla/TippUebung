@@ -11,7 +11,7 @@
 			}
 			#input1{
 				position:relative;
-				left:700px;
+				left:500px;
 				width:40pt;
 				padding:15pt;
 				border-radius:15pt;
@@ -23,18 +23,18 @@
 			#String, #String2{
 				position:relative;				
 				display:flex;
-				height:50pt;
-				left:500px;
+				height:60pt;
 				background-color:lightblue;
 				font-size:40pt;
 				border-radius:20pt;
 				text-align:left;
+				width:1600pt;
 			}
 			
 			#String p,#String2 p{
 				margin:0pt;
 				text-align:center;
-				width:20pt;
+				width:32px;
 				padding:0pt;
 			}
 			
@@ -76,7 +76,7 @@
 			var tastenAnschlagNext="";
 			var tastenCounter=0;
 			var zeitVerbrauch="";
-			var pos=500; //entspricht dem css vom String ("left")
+			var pos=300; //entspricht dem css vom String ("left")
 			
 			$("#input1").focus();
 			var startZeit= $.now();
@@ -130,24 +130,24 @@
 
 							aktuellePositionImString= trefferAnzahl/anzahlKinder*breiteFrame;
 
-							var id=setInterval(frame,100);
+							var id=setInterval(frame,50);
 							function frame(){
-								if((pos>500-aktuellePositionImString)&&(pos<=800-aktuellePositionImString)){
-									pos=pos-0.1;
+								if((pos>300-aktuellePositionImString)&&(pos<=500-aktuellePositionImString)){
+									pos=pos-0.2;
 									console.log(pos);
 									$("#String").css("left",pos +"px");	
 									$("#String2").css("left",pos +"px");
 									//setTimeout(function(){clearInterval(id);},1000);									
 								}
-								else if((pos>500-aktuellePositionImString)&&(pos<=1600-aktuellePositionImString)){
-									pos=pos-0.2;
+								else if((pos>300-aktuellePositionImString)&&(pos<=800-aktuellePositionImString)){
+									pos=pos-0.3;
 									console.log(pos);
 									$("#String").css("left",pos +"px");	
 									$("#String2").css("left",pos +"px");
 									//setTimeout(function(){clearInterval(id);},1000);	
 								}
-									else if((pos>500-aktuellePositionImString)&&(pos>=1600-aktuellePositionImString)){
-									pos=pos-0.6;
+									else if((pos>300-aktuellePositionImString)&&(pos>800-aktuellePositionImString)){
+									pos=pos-0.5;
 									console.log(pos);
 									$("#String").css("left",pos +"px");	
 									$("#String2").css("left",pos +"px");
@@ -219,9 +219,9 @@
 				startZeit= $.now();
 				fehler=0;
 				trefferAnzahl=0;
-				$("#String").css("left","500px");
-				$("#String2").css("left","500px");
-				pos=500;
+				$("#String").css("left","300px");
+				$("#String2").css("left","300px");
+				pos=300;
 				aktuellePositionImString= 0;
 				//aktuell=0;
 				var breite=$("#String").css("width");
