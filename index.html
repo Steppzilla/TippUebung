@@ -71,12 +71,7 @@
 		</div>
 
 		<script>
-			var string = "k kkk kk kkkk k k kkk kj kkj jkk kj jj j kkk jk kj kk kj lll l lll";  //string definieren
-				for(i=0;i<string.length;i++){
-				$("#String").append("<p>" + string[i] +"</p>");
-				var breite=$("#String").css("width");
-				$("#String2").css("width", breite);
-			}
+			var string = "";  //string definieren
 			var tastenAnschlagStart="";
 			var tastenAnschlagNext="";
 			var tastenCounter=0;
@@ -88,14 +83,16 @@
 			var fehler=0;
 			var trefferAnzahl=0;
 			var aktuellePositionImString= 0;
-			var aktuell=0;
+		//	var aktuell=0; //aktuell markierte/richtige
+			
+			neuerString();
 			
 			$("#input1").keyup(function(e){			//Wenn Taste gedrückt (bzw beim hochnehmen der Taste) wird passiert folgendes:
 				// console.log(`key=${e.key},code=${e.code}`);
 				if(e.code=="Backspace"){
 					var marked=$(".markiert").length;
 					var index2=$("#String2").children().last().index()
-					console.log(marked+" " + index2);
+					//console.log(marked+" " + index2);
 					if(marked>index2){
 						$("#String").children().eq(index2).removeClass("markiert");
 						trefferAnzahl=trefferAnzahl-1;
@@ -105,13 +102,15 @@
 				}
 				else{
 					var inhalt = $(this).val();       //Inhalt des aktuellen Inputfensters auslesen und in Variable "inhalt" speichernl
-					$("#String2").append("<p>"+ inhalt + "</p>"); //Inhalt in string2 eingeben..
-				
+					if(trefferAnzahl+fehler<=string.length){
+					//	console.log("Treffer: " + trefferAnzahl + "kleiner als:" + string.length);
+						$("#String2").append("<p>"+ inhalt + "</p>"); //Inhalt in string2 eingeben..
+					}
 					$("#input1").val("");         //inputfenster wieder leeren
 					var y = string.substring(trefferAnzahl,trefferAnzahl+1);       // den ersten Wert des Strings auslesen, in y speichern
-					//alert(inhalt +" : "+ y + "Treffer: " + trefferAnzahl);
+					//console.log(inhalt +" : "+ y + "Treffer: " + trefferAnzahl);
 					if(inhalt==y){                 //Den 1. Wert mit der Eingabe vergleichen. Entspricht die Eingabe dem Wert, dann wird:
-						console.log(inhalt + " " + y);
+					//	console.log(inhalt + " " + y);
 						tastenAnschlagNext=$.now();
 						if(tastenCounter == 0){
 							tastenAnschlagStart=$.now();
@@ -122,15 +121,15 @@
 						}
 						else
 						{	
-							var geschwindigkeit=tastenCounter/zeitVerbrauch;
+							var geschwindigkeit=trefferAnzahl/zeitVerbrauch;
 							//BEWEGUNGSFUNKTION:
-							aktuell=$(".markiert").last().index();
+						//	aktuell=$(".markiert").last().index();
 							var anzahlKinder = $("#String").children().length;
 							var breiteFrame=$("#String").css("width");
 							breiteFrame=breiteFrame.substring(0,breiteFrame.length-2); //nur die zahl extrahieren;
 						
 
-							aktuellePositionImString= aktuell/anzahlKinder*breiteFrame;
+							aktuellePositionImString= trefferAnzahl/anzahlKinder*breiteFrame;
 
 							var id=setInterval(frame,100);
 							function frame(){
@@ -147,7 +146,9 @@
 						//alert(anzahlRot); klappt, sagt aber nicht die zahl wenns rote gibt
 						if(anzahlRot==0){ //nur wenn keins rot ist
 							$("#String").children().eq(trefferAnzahl).addClass("markiert");
-							trefferAnzahl = trefferAnzahl+1;
+							if(trefferAnzahl<string.length){
+								trefferAnzahl = trefferAnzahl+1;
+							}
 						}else{
 							$("#String2").children().last().addClass("falsch");
 						}
@@ -155,12 +156,18 @@
 							var endZeit=$.now();
 							var verbrauchteZeit = endZeit-startZeit;
 							verbrauchteZeit = verbrauchteZeit.toString().substring(0,2);
+							$("#Ausgabe").show();
 							$("#Ausgabe").text("Deine Zeit: " + verbrauchteZeit + " Sekunden" + ". Anzahl der Fehler:" + fehler);
+							console.log("Deine Zeit: " + verbrauchteZeit + " Sekunden" + ". Anzahl der Fehler:" + fehler);
+							setTimeout(function(){$("#Ausgabe").hide();},5000);
+							neuerString();
+
 						}
 					}				
 					else{
 						fehler++
 						$("#String2").children().last().addClass("falsch");
+
 					}
 					tastenAnschlagStart=tastenAnschlagNext;
 					tastenCounter++;
@@ -168,7 +175,7 @@
 			});
 			
 			function neuerString(){
-				$("#Ausgabe").empty();
+				//$("#Ausgabe").empty();
 				var buchstaben=zahlzuBuchstabe(4);
 				var neuesArray=stringBauer(buchstaben);
 				//alert(neuesArray);   //hier richtiger String (leerzeichen "leer")
@@ -200,7 +207,7 @@
 				$("#String2").css("left","500px");
 				pos=500;
 				aktuellePositionImString= 0;
-				aktuell=0;
+				//aktuell=0;
 				var breite=$("#String").css("width");
 				$("#String2").css("width", breite);
 			}
