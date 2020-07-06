@@ -93,6 +93,14 @@
 			$("#input1").keyup(function(e){			//Wenn Taste gedrückt (bzw beim hochnehmen der Taste) wird passiert folgendes:
 				// console.log(`key=${e.key},code=${e.code}`);
 				if(e.code=="Backspace"){
+					var marked=$(".markiert").length;
+					var index2=$("#String2").children().last().index()
+					console.log(marked+" " + index2);
+					if(marked>index2){
+						$("#String").children().eq(index2).removeClass("markiert");
+						trefferAnzahl=trefferAnzahl-1;
+					}
+					
 				 $("#String2").children().last().remove();
 				}
 				else{
