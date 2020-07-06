@@ -126,18 +126,34 @@
 						//	aktuell=$(".markiert").last().index();
 							var anzahlKinder = $("#String").children().length;
 							var breiteFrame=$("#String").css("width");
-							breiteFrame=breiteFrame.substring(0,breiteFrame.length-2); //nur die zahl extrahieren;
-						
+							breiteFrame=breiteFrame.substring(0,breiteFrame.length-2); //nur die zahl extrahieren; (px wegschneiden)
 
 							aktuellePositionImString= trefferAnzahl/anzahlKinder*breiteFrame;
 
 							var id=setInterval(frame,100);
 							function frame(){
-								if(pos>500-aktuellePositionImString){
-									pos=pos-1;
+								if((pos>500-aktuellePositionImString)&&(pos<=800-aktuellePositionImString)){
+									pos=pos-0.1;
+									console.log(pos);
 									$("#String").css("left",pos +"px");	
-									$("#String2").css("left",pos +"px");	
-								}else{
+									$("#String2").css("left",pos +"px");
+									//setTimeout(function(){clearInterval(id);},1000);									
+								}
+								else if((pos>500-aktuellePositionImString)&&(pos<=1600-aktuellePositionImString)){
+									pos=pos-0.2;
+									console.log(pos);
+									$("#String").css("left",pos +"px");	
+									$("#String2").css("left",pos +"px");
+									//setTimeout(function(){clearInterval(id);},1000);	
+								}
+									else if((pos>500-aktuellePositionImString)&&(pos>=1600-aktuellePositionImString)){
+									pos=pos-0.6;
+									console.log(pos);
+									$("#String").css("left",pos +"px");	
+									$("#String2").css("left",pos +"px");
+									//setTimeout(function(){clearInterval(id);},1000);	
+								}
+								else{
 									clearInterval(id);
 								}
 							}
