@@ -257,7 +257,8 @@ function stringBauer(buchstaben){
 	for(i=0;i<66;i++){ //30 buchstaben-string
 		var random=Math.floor(Math.random()*(anzahl))+0;
 		var aktuellerBuchstabe=buchstaben[random];
-		while((pauseWAR==true)&&(random==0)){					//Solang pausen true waren und random noch null ist (pause), erstellt er neue randomzahlen
+
+		while(((pauseWAR==true)&&(random==0))||(i==65)){					//Solang pausen true waren und random noch null ist (pause), erstellt er neue randomzahlen
 			random=Math.floor(Math.random()*(anzahl))+0;
 			aktuellerBuchstabe=buchstaben[random];			
 			if(random!=0){
@@ -273,6 +274,7 @@ function stringBauer(buchstaben){
 			pauseWAR=false;									//keine Pause: pauseWar=falsch, dann geht er nicht in die while-schleife.
 			buchstabencounter++;							//Buchstaben werden hochgezählt für jeden buchstaben der keine pause ist.
 		}
+		
 		stringNeu=stringNeu+"<p>" + aktuellerBuchstabe + "</p>";
 			
 	}
